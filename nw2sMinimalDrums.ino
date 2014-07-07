@@ -117,7 +117,7 @@ void loop() {
 
       // will the program run for this column?
       randValueSubtract = random(0, 500);
-      int randAnalogInSubtract = 500 - (constrain(analogRead(10), 0, 500));
+      int randAnalogInSubtract = 500 - (constrain(analogRead(2), 0, 500));
       if (randValueSubtract > randAnalogInSubtract) {
         
         // set drumProgram
@@ -133,7 +133,7 @@ void loop() {
 
         // a 1 is added to isThisATrigger anyway... maybe
         randValueAdd = random(0, 5000);
-        int randAnalogInAdd = 500 - (constrain(analogRead(9), 0, 500));
+        int randAnalogInAdd = 500 - (constrain(analogRead(4), 0, 500));
         if (randValueAdd < randAnalogInAdd) {
           digitalWrite(pinOffset+(row-1), 1);
           isThisATrigger[row-1] = 1;
@@ -153,7 +153,7 @@ void loop() {
         }         
       } // rand subtract
     }
-    int bpmSubtraction = 400 - (constrain(analogRead(11), 0, 399));
+    int bpmSubtraction = 400 - (constrain(analogRead(0), 0, 399));
     delay(400 - bpmSubtraction); // delay after each beat == bpm
   }
 }
