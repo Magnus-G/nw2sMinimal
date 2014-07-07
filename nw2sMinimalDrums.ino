@@ -1,5 +1,54 @@
-
 #include <Arduino.h>
+#include <SPI.h>
+#include <Wire.h>
+
+// ----------------------------------------------------------------------------
+// max4822.h
+//
+// Provides an SPI based interface to the MCP4822 dual voltage output digital 
+// to analog to converter.
+//
+// Author: Will Dickson, IO Rodeo Inc.
+// ----------------------------------------------------------------------------
+#ifndef _MCP4822_H_
+#define _MCP4822_H_
+
+#define MCP4822_NUMCHAN 2
+
+enum MCP4822_DAC_CHAN {MCP4822_DAC_A, MCP4822_DAC_B};
+
+class MCP4822 {
+private:
+    int cs;
+    int ldac;
+    int gain[MCP4822_NUMCHAN];
+    int getCmdWrd(int dac, int value);
+public:
+    MCP4822();
+    MCP4822(int csPin, int ldacPin);
+    void begin();
+    void setValue(int dac, int value);
+    void setValue_A(int value);
+    void setValue_B(int value);
+    void setValue_AB(int value_A, int value_B);
+    void setGain2X(int dac);
+    void setGain2X_A();
+    void setGain2X_B();
+    void setGain2X_AB();
+    void setGain1X(int dac);
+    void setGain1X_A();
+    void setGain1X_B();
+    void setGain1X_AB();
+    void off_AB();
+    void off_A();
+    void off_B();
+    void off(int dac);
+};
+#endif
+
+
+///////////////
+
 
 // drums [z][y][x]
 int const noOfDrumPrograms = 1;
@@ -48,11 +97,10 @@ int everyOtherTrigger[noOfDrumSteps] = {1,1,1,1,1,1,1};
 
 ////////////////////////////////////////////////////////////
 
-
 void setup() {
 
   Serial.begin(9600);
-  
+
   // setup Digital Out
   for (int i=22; i<38; i++) {
     pinMode(i, OUTPUT);
@@ -61,14 +109,16 @@ void setup() {
 
 }
 
-void loop() {
+void loop() {  
+
 // go through drum matrix
   for (int column=1; column<17; column++) { // temporal. start with first beat point...
     for (int row=1; row<noOfDrumSteps; row++) { // vertical, outputs. start with output 0...
 
       // will the program run for this column?
-      randValueSubtract = random(0, 5000);
-      if (randValueSubtract > 1000) {  // if (randValueSubtract > analogRead(2)) {
+      randValueSubtract = random(0, 500);
+      int randAnalogIn = 500 - (constrain(analogRead(10), 0, 500));
+      if (randValueSubtract > randAnalogIn) {  // if (randValueSubtract > analogRead(2)) {
         
         // set drumProgram
         int drumProgram = (analogRead(0) / (1023/noOfDrumPrograms)); if (drumProgram > 0) {  drumProgram--; } // deal with zero indexing on addressing the array vs the integer declared to set the number.
@@ -102,6 +152,7 @@ void loop() {
         }         
       } // rand subtract
     }
-    delay(200); // delay after each beat == bpm
+    int value = 400 - (constrain(analogRead(11), 0, 399));
+    delay(400 - value); // delay after each beat == bpm
   }
 }
