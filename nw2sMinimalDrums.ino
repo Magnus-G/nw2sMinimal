@@ -107,9 +107,31 @@ void setup() {
     digitalWrite(i, LOW);
   }
 
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
+  pinMode(14, OUTPUT);
+
+  pinMode(40, OUTPUT);
+  pinMode(41, OUTPUT);
+  pinMode(42, OUTPUT);
+
+  pinMode(50, OUTPUT);
+
 }
 
+////////////////////////////////////////////////////////////
+
 void loop() {  
+
+  analogWrite(12, 0);
+  analogWrite(13, 100);
+  analogWrite(14, 2000);
+
+  analogWrite(40, 0);
+  analogWrite(41, 100);
+  analogWrite(42, 2000);
+
+  analogWrite(50, 200);
 
 // go through drum matrix
   for (int column=1; column<17; column++) { // temporal. start with first beat point...
