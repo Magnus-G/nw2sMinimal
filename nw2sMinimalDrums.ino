@@ -47,6 +47,24 @@ public:
 #endif
 
 
+MCP4822b spidac = MCP4822(2,11);
+spidac.begin();
+SPI.setDataMode(SPI_MODE0);
+SPI.setBitOrder(MSBFIRST);
+SPI.setClockDivider(42);
+SPI.begin();
+spidac.setGain1X(this->0);
+
+// then...
+
+// spidac.setValue(spidac_index, outputvalue);
+
+
+// where cspin is one of 2 through 9 (two dac channels per chip-select line)
+// ldacpin = 11 
+// spidac_index is 0 or 1 for each channel on the dac
+// outputvalue is the 0-4096 you want to output where 0 = +5V and 4096 = -5V
+
 ///////////////
 
 
@@ -107,31 +125,13 @@ void setup() {
     digitalWrite(i, LOW);
   }
 
-  pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
-  pinMode(14, OUTPUT);
-
-  pinMode(40, OUTPUT);
-  pinMode(41, OUTPUT);
-  pinMode(42, OUTPUT);
-
-  pinMode(50, OUTPUT);
-
 }
 
 ////////////////////////////////////////////////////////////
 
 void loop() {  
 
-  analogWrite(12, 0);
-  analogWrite(13, 100);
-  analogWrite(14, 2000);
-
-  analogWrite(40, 0);
-  analogWrite(41, 100);
-  analogWrite(42, 2000);
-
-  analogWrite(50, 200);
+spidac.setValue(0, 200);
 
 // go through drum matrix
   for (int column=1; column<17; column++) { // temporal. start with first beat point...
